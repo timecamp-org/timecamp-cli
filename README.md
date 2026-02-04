@@ -37,10 +37,10 @@ node bin/timecamp.js entries --from 2026-02-01 --to 2026-02-04
 node bin/timecamp.js entries --date 2026-02-04 --task 12345
 
 # Add a time entry
-node bin/timecamp.js add-entry --date 2026-02-04 --start 09:00 --end 10:30 --duration 5400 --task "Project A"
+node bin/timecamp.js add-entry --date 2026-02-04 --start 09:00 --end 10:30 --duration 5400 --task "Project A" --note "Daily standup"
 
 # Update a time entry
-node bin/timecamp.js update-entry --id 101234 --description "Updated description" --duration 3600
+node bin/timecamp.js update-entry --id 101234 --note "Updated description" --duration 3600
 
 # Remove a time entry
 node bin/timecamp.js remove-entry --id 101234

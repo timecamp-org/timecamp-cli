@@ -228,10 +228,10 @@ Commands:
   entries [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--task <id|name>]
                                               List time entries (default today)
   add-entry --date YYYY-MM-DD --start HH:MM --end HH:MM --duration 3600
-            [--description <text>] [--task <id|name>]
+            [--note <text>] [--task <id|name>]
                                               Add a time entry
   update-entry --id <entryId> [--date YYYY-MM-DD] [--start HH:MM]
-               [--end HH:MM] [--duration 3600] [--description <text>]
+               [--end HH:MM] [--duration 3600] [--note <text>]
                [--task <id|name>]
                                               Update a time entry
   remove-entry --id <entryId>                 Remove a time entry
@@ -360,8 +360,8 @@ async function handleAddEntry(api, flags) {
     end_time: endTime,
   };
 
-  const description = getFlag(flags, "description", "note");
-  if (description) entry.description = description;
+  const note = getFlag(flags, "note", "description");
+  if (note) entry.description = note;
 
   const taskQuery = getFlag(flags, "task", "task_id", "task-id");
   if (taskQuery) {
@@ -406,8 +406,8 @@ async function handleUpdateEntry(api, flags, positionals) {
     data.duration = parseDurationSeconds(durationValue);
   }
 
-  const description = getFlag(flags, "description", "note");
-  if (description) data.description = description;
+  const note = getFlag(flags, "note", "description");
+  if (note) data.description = note;
 
   const taskQuery = getFlag(flags, "task", "task_id", "task-id");
   if (taskQuery) {
