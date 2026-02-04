@@ -24,6 +24,17 @@ function formatDate(date) {
   return `${year}-${month}-${day}`;
 }
 
+function formatDateTime(date) {
+  const value = date ? new Date(date) : new Date();
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, "0");
+  const day = String(value.getDate()).padStart(2, "0");
+  const hours = String(value.getHours()).padStart(2, "0");
+  const minutes = String(value.getMinutes()).padStart(2, "0");
+  const seconds = String(value.getSeconds()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 function normalizeTime(value) {
   if (!value) return undefined;
   if (/^\d{2}:\d{2}:\d{2}$/.test(value)) return value;
@@ -248,11 +259,30 @@ async function handleStart(api, flags) {
     const task = resolveTask(tasks, taskQuery);
     payload.task_id = Number(task.task_id);
   }
-  if (note) payload.note = note;
   if (startedAt) payload.started_at = startedAt;
 
-  const response =
-    Object.keys(payload).length > 0 ? await api.timer.start(payload) : await api.timer.start();
+  let response;
+  if (note) {
+    const serviceName =
+      typeof api.timer.getClientName === "function"
+        ? api.timer.getClientName()
+        : "timecamp-cli";
+    const requestPayload = {
+      action: "start",
+      task_id: payload.task_id,
+      started_at: payload.started_at || formatDateTime(),
+      note,
+      service: serviceName,
+    };
+    response = await api.timer.makeRequest("POST", "timer", {
+      json: requestPayload,
+    });
+  } else {
+    response =
+      Object.keys(payload).length > 0
+        ? await api.timer.start(payload)
+        : await api.timer.start();
+  }
   printJson(response);
 }
 
