@@ -12,7 +12,12 @@
   "engines": {
     "node": ">=16"
   },
+  "oclif": {
+    "bin": "timecamp",
+    "commands": "./src/commands"
+  },
   "dependencies": {
+    "@oclif/core": "^4.8.0",
     "timecamp-api": "^1.7.2"
   }
 }

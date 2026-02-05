@@ -15,10 +15,24 @@ npm install
 
 You can also use `pnpm install` or `bun install`.
 
+## Global install (from repo)
+
+To make `timecamp` available globally from this local repo:
+
+```bash
+npm link
+```
+
+Or, install it globally directly from the repo folder:
+
+```bash
+npm install -g .
+```
+
 ## Usage
 
 ```bash
-node bin/timecamp.js --help
+timecamp --help
 ```
 
 Example commands:
@@ -27,27 +41,27 @@ Example commands:
 export TIMECAMP_API_KEY="your-api-key"
 
 # Start/stop/status
-node bin/timecamp.js start --task "Project A" --note "Daily standup"
-node bin/timecamp.js stop
-node bin/timecamp.js status
+timecamp start --task "Project A" --note "Daily standup"
+timecamp stop
+timecamp status
 
 # Time entries (defaults to today)
-node bin/timecamp.js entries
-node bin/timecamp.js entries --from 2026-02-01 --to 2026-02-04
-node bin/timecamp.js entries --date 2026-02-04 --task 12345
+timecamp entries
+timecamp entries --from 2026-02-01 --to 2026-02-04
+timecamp entries --date 2026-02-04 --task 12345
 
 # Add a time entry
-node bin/timecamp.js add-entry --date 2026-02-04 --start 09:00 --end 10:30 --duration 5400 --task "Project A" --note "Daily standup"
+timecamp add-entry --date 2026-02-04 --start 09:00 --end 10:30 --duration 5400 --task "Project A" --note "Daily standup"
 
 # Update a time entry
-node bin/timecamp.js update-entry --id 101234 --note "Updated description" --duration 3600
+timecamp update-entry --id 101234 --note "Updated description" --duration 3600
 
 # Remove a time entry
-node bin/timecamp.js remove-entry --id 101234
+timecamp remove-entry --id 101234
 
 # List tasks (cached)
-node bin/timecamp.js tasks
-node bin/timecamp.js tasks --refresh
+timecamp tasks
+timecamp tasks --refresh
 ```
 
 ## Task selector
@@ -63,3 +77,21 @@ If the selector matches multiple tasks, the command fails with a list of matches
 ## Task cache
 
 Tasks are cached in `~/.timecamp-cli/tasks-cache.json` and refreshed every 10 minutes.
+
+## Compile executable (bun)
+
+To build a standalone executable with Bun:
+
+```bash
+bun build ./bin/timecamp.js --compile --outfile timecamp
+```
+
+You can also cross-compile by adding a target:
+
+```bash
+bun build ./bin/timecamp.js --compile="bun-darwin-arm64" --outfile timecamp
+```
+
+## License
+
+MIT
