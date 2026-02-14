@@ -49,6 +49,7 @@ timecamp status
 timecamp entries
 timecamp entries --from 2026-02-01 --to 2026-02-04
 timecamp entries --date 2026-02-04 --task 12345
+timecamp entries --all-users --from 2026-02-01 --to 2026-02-04
 
 # Add a time entry
 timecamp add-entry --date 2026-02-04 --start 09:00 --end 10:30 --duration 5400 --task "Project A" --note "Daily standup"
@@ -62,6 +63,7 @@ timecamp remove-entry --id 101234
 # List tasks (cached)
 timecamp tasks
 timecamp tasks --refresh
+timecamp tasks --all-users
 ```
 
 ## Task selector

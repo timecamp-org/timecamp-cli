@@ -13,13 +13,21 @@ class Tasks extends Command {
       description: "Print full task payload",
       default: false,
     }),
+    "all-users": Flags.boolean({
+      description: "Fetch tasks for all users, not just the current user",
+      default: false,
+      aliases: ["all_users"],
+    }),
   };
 
   async run() {
     const { flags } = await this.parse(Tasks);
     const api = getApi();
 
-    const tasks = await getTasks(api, { refresh: Boolean(flags.refresh) });
+    const tasks = await getTasks(api, {
+      refresh: Boolean(flags.refresh),
+      allUsers: Boolean(flags["all-users"]),
+    });
     if (flags.raw) {
       printJson(tasks);
       return;

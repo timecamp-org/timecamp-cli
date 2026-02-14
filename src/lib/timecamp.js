@@ -35,7 +35,7 @@ function normalizeTime(value) {
   if (/^\d{2}:\d{2}:\d{2}$/.test(value)) return value;
   if (/^\d{2}:\d{2}$/.test(value)) return `${value}:00`;
   throw new Errors.CLIError(
-    `Invalid time format: ${value}. Use HH:MM or HH:MM:SS.`
+    `Invalid time format: ${value}. Use HH:MM or HH:MM:SS.`,
   );
 }
 
@@ -46,7 +46,7 @@ function parseDurationSeconds(value) {
   const match = raw.match(/^(\d+)([hms])$/i);
   if (!match) {
     throw new Errors.CLIError(
-      `Invalid duration: ${value}. Use seconds or 1h/30m/45s format.`
+      `Invalid duration: ${value}. Use seconds or 1h/30m/45s format.`,
     );
   }
   const amount = Number(match[1]);
@@ -116,7 +116,23 @@ async function fetchTasks(api) {
   return response.data || [];
 }
 
-async function getTasks(api, { refresh = false } = {}) {
+async function fetchAllTasks(api) {
+  const response = await api.tasks.getAll();
+
+  if (!response || response.success === false) {
+    const message =
+      response?.message || response?.error || "Failed to fetch tasks.";
+    throw new Errors.CLIError(message);
+  }
+
+  return response.data || [];
+}
+
+async function getTasks(api, { refresh = false, allUsers = false } = {}) {
+  if (allUsers) {
+    return fetchAllTasks(api);
+  }
+
   if (!refresh) {
     const cache = readTasksCache();
     if (isCacheFresh(cache)) return cache.tasks;
@@ -140,7 +156,9 @@ function resolveTask(tasks, query) {
   }
 
   const matches = tasks.filter((task) =>
-    String(task.name || "").toLowerCase().includes(normalized)
+    String(task.name || "")
+      .toLowerCase()
+      .includes(normalized),
   );
 
   if (matches.length === 0) {
@@ -153,7 +171,7 @@ function resolveTask(tasks, query) {
       .map((task) => `- ${task.task_id}: ${task.name}`)
       .join("\n");
     throw new Errors.CLIError(
-      `Task query matched multiple tasks:\n${preview}\nRefine your query.`
+      `Task query matched multiple tasks:\n${preview}\nRefine your query.`,
     );
   }
 

@@ -1,5 +1,11 @@
 const { Command, Flags } = require("@oclif/core");
-const { formatDate, getApi, getTasks, printJson, resolveTask } = require("../lib/timecamp");
+const {
+  formatDate,
+  getApi,
+  getTasks,
+  printJson,
+  resolveTask,
+} = require("../lib/timecamp");
 
 class Entries extends Command {
   static description = "List time entries";
@@ -23,6 +29,11 @@ class Entries extends Command {
     refresh: Flags.boolean({
       description: "Refresh tasks cache before resolving task",
       default: false,
+    }),
+    "all-users": Flags.boolean({
+      description: "Fetch entries for all users, not just the current user",
+      default: false,
+      aliases: ["all_users"],
     }),
   };
 
@@ -48,11 +59,13 @@ class Entries extends Command {
     }
 
     const params = {
-      user_id: "me",
-      user_ids: "me",
       date_from: from,
       date_to: to,
     };
+
+    if (!flags["all-users"]) {
+      params.user_ids = "me";
+    }
 
     if (flags.task) {
       const tasks = await getTasks(api, { refresh: Boolean(flags.refresh) });
