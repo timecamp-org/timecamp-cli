@@ -17,7 +17,7 @@
     "commands": "./src/commands"
   },
   "dependencies": {
-    "@oclif/core": "^4.8.0",
+    "@oclif/core": "^4.8.1",
     "timecamp-api": "^1.7.2"
   }
 }
